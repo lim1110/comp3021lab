@@ -1,8 +1,10 @@
 package base;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class Folder {
+public class Folder implements Comparable<Folder>{
 	private ArrayList<Note> notes = new ArrayList<Note>();
 	private String name;
 
@@ -20,6 +22,63 @@ public class Folder {
 
 	public ArrayList<Note> getNotes(){
 		return notes;
+	}
+
+	public void sortNotes(){
+		Collections.sort(notes);
+	}
+
+	public List<Note> searchNotes(String keywords){
+		List<Note> tampNote = new ArrayList<Note>();
+		ArrayList<String> compareString = new ArrayList<String>();
+		StringBuilder tampString = new StringBuilder();
+		String[] tokens = keywords.split(" ", 0);
+
+		boolean orAppear = false;
+		for(int i = 0; i < tokens.length; i++){
+			String word = tokens[i];
+			if(word.equalsIgnoreCase("or")){
+				orAppear = true;
+			} else {
+				if(orAppear){
+					tampString.append(" " + word);
+					compareString.add(tampString.toString());
+					tampString.setLength(0);
+					orAppear = false;
+				} else {
+					tampString.append(word);
+				}
+			}
+		}
+
+		for(Note note:notes){
+			boolean match = false;
+			for(String word: compareString){
+				match = false;
+				tokens = word.split(" ", 0);
+				//System.out.println(word);
+
+				for(String orWord:tokens){
+					if(note instanceof ImageNote){
+						if(note.getTitle().matches("(?i).*" +orWord+ ".*"))
+							match = true;
+					} else {
+						if(note.getTitle().matches("(?i).*" +orWord+ ".*"))
+							match = true;
+						if(((TextNote)note).content != null)
+							if(((TextNote)note).content.matches("(?i).*" +orWord+ ".*"))
+								match = true;
+					}
+				}
+
+
+				if(!match)
+					break;
+			}
+			if (match)
+				tampNote.add(note);
+		}
+		return tampNote;
 	}
 
 	@Override
@@ -52,4 +111,16 @@ public class Folder {
 
 		return name + ":" + nText + ":" + nImage;
 	}
+
+	@Override
+	public int compareTo(Folder folder) {
+		// TODO Auto-generated method stub
+		if(name.compareTo(folder.name) > 0)
+			return 1;
+		else if(name.compareTo(folder.name) < 0)
+			return -1;
+		else
+			return 0;
+	}
+
 }
