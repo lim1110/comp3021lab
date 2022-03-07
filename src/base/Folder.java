@@ -56,7 +56,6 @@ public class Folder implements Comparable<Folder>{
 			for(String word: compareString){
 				match = false;
 				tokens = word.split(" ", 0);
-				//System.out.println(word);
 
 				for(String orWord:tokens){
 					if(note instanceof ImageNote){
@@ -70,14 +69,13 @@ public class Folder implements Comparable<Folder>{
 								match = true;
 					}
 				}
-
-
 				if(!match)
 					break;
 			}
 			if (match)
 				tampNote.add(note);
 		}
+
 		return tampNote;
 	}
 
