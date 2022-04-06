@@ -53,6 +53,9 @@ public class Folder implements Comparable<Folder>, Serializable{
 			}
 		}
 
+		if(tokens.length == 1)
+		compareString.add(tokens[0]);
+
 		for(Note note:notes){
 			boolean match = false;
 			for(String word: compareString){
